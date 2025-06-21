@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Text Matcher</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 50px;
+            background-color: #f7f7f7;
+        }
+        table {
+            border-collapse: collapse;
+        }
+
+        table th, table td {
+            border: 1px solid #ccc;
+            text-align: left;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .container {
+            width: 60%;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        input[type="text"], input[type="file"] {
+            width: 80%;
+            padding: 12px;
+            font-size: 16px;
+        }
+        button {
+            padding: 12px 24px;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        .result {
+            margin-top: 30px;
+            padding: 15px;
+            background-color: #e2f0d9;
+            border-left: 6px solid #4CAF50;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .file-upload-section {
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Enter Description to Search</h2>
+        <form method="POST" enctype="multipart/form-data">
+            <input type="text" name="description" placeholder="e.g., Aluminium Rod" value="{{ request.form.description }}">
+            <input type="number" name="limit" min="1" placeholder="No. of Records to Display" value="{{ request.form.limit }}">
+            <button type="submit">Search</button>
+
+            <div class="file-upload-section">
+                <h3>Upload a File</h3>
+                <input type="file" name="file" accept=".csv" required>
+            </div>
+        </form>
+
+
+        {% if result %}
+        <div class="result">
+            <p><strong>Retrieval Time:</strong> {{ retrieval_time }} seconds</p>
+            <p><strong>No. of Records:</strong> {{ limit }} out of {{record_count}}</p>
+
+            <table border="1" cellpadding="10" cellspacing="0" style="width:100%; margin-top:20px;">
+                <tr style="background-color: #d0e6ff;">
+                    <th>Item Code</th>
+                    <th>Description</th>
+                    <th>Long Description</th>
+                    <th>Similarity Score</th>
+                </tr>
+                {% for code, desc, l_desc, sc in result %}
+                <tr>
+                    <td>{{ code }}</td>
+                    <td>{{ desc }}</td>
+                    <td>{{ l_desc }}</td>
+                    <td>{{ sc }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
